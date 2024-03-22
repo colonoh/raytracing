@@ -3,8 +3,7 @@ import sys
 import numpy as np
 from tqdm import tqdm
 
-
-MAX_COLOR_VALUE: int = 255
+from color import MAX_COLOR_VALUE, write_color
 
 
 def main():
@@ -13,18 +12,15 @@ def main():
 
     print(f"P3\n{image_width} {image_height}\n{MAX_COLOR_VALUE}")
 
+    pixel_color = np.zeros(3)
+
     for j in tqdm(range(image_height)):
         for i in range(image_width):
-            r = i / (image_width - 1)
-            g = j / (image_height - 1)
-            b = 0
-
-            ir = int(MAX_COLOR_VALUE * r)
-            ig = int(MAX_COLOR_VALUE * g)
-            ib = int(MAX_COLOR_VALUE * b)
-
-            print(f"{ir} {ig} {ib}")
-
+            pixel_color[0] = i / (image_width - 1)
+            pixel_color[1] = j / (image_height - 1)
+            pixel_color[2] = 0
+            write_color(pixel_color)
+            
     print("Done!", file=sys.stderr)
 
 
