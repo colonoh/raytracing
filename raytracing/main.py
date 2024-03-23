@@ -8,9 +8,21 @@ from ray import Ray
 
 
 def ray_color(r: Ray) -> np.ndarray:
+    if (hit_sphere(np.array([0, 0, -1]), 0.5, r)):
+        return np.array([1, 0, 0])
+
     unit_direction = r.unit_direction()
     a = 0.5 * (unit_direction[1] + 1.)
     return (1. - a) * np.array([1., 1., 1.,]) + a * np.array([0.5, 0.7, 1.0])
+
+
+def hit_sphere(center: np.ndarray, radius: float, ray: Ray):
+    oc = ray.origin - center
+    a = np.dot(ray.direction, ray.direction)
+    b = 2. * np.dot(oc, ray.direction)
+    c = np.dot(oc, oc) - radius * radius
+    discriminant = b * b - 4 * a * c
+    return (discriminant >= 0)
 
 
 def main():
