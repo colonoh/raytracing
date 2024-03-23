@@ -6,7 +6,7 @@ class Ray:
         self.origin = origin
         self.direction = direction
 
-    def at(t: float) -> np.ndarray:
+    def at(self, t: float) -> np.ndarray:
         return self.origin + t * self.direction
 
     def unit_direction(self) -> np.ndarray:

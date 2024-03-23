@@ -8,8 +8,13 @@ from ray import Ray
 
 
 def ray_color(r: Ray) -> np.ndarray:
-    if (hit_sphere(np.array([0, 0, -1]), 0.5, r)):
-        return np.array([1, 0, 0])
+
+    t = hit_sphere(np.array([0, 0, -1]), 0.5, r)
+    if t > 0.:
+        N = np.array(r.at(t) - np.array([0., 0., -1.]))
+        N /= np.linalg.norm(N)  # make it a unit vector
+        return 0.5 * np.array([N[0] + 1, N[1] + 1, N[2] + 1])
+
 
     unit_direction = r.unit_direction()
     a = 0.5 * (unit_direction[1] + 1.)
@@ -19,10 +24,14 @@ def ray_color(r: Ray) -> np.ndarray:
 def hit_sphere(center: np.ndarray, radius: float, ray: Ray):
     oc = ray.origin - center
     a = np.dot(ray.direction, ray.direction)
-    b = 2. * np.dot(oc, ray.direction)
+    half_b = np.dot(oc, ray.direction)
     c = np.dot(oc, oc) - radius * radius
-    discriminant = b * b - 4 * a * c
-    return (discriminant >= 0)
+    discriminant = half_b * half_b - a * c
+
+    if discriminant < 0.:
+        return -1.
+    else:
+        return (-half_b - np.sqrt(discriminant)) / a
 
 
 def main():
